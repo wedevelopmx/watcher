@@ -1,0 +1,12 @@
+{
+  "apps": [{
+      "name": "cron",
+      "script": "cron.js",
+      "watch": false,
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "80",
+        "IP_ADDRESS": "0.0.0.0"
+      }
+    }]
+}

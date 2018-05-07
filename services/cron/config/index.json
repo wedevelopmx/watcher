@@ -1,0 +1,18 @@
+{
+  "mongo": {
+    "uri": "mongodb://mongo/monitor",
+    "options": {
+      "native_parser": true,
+      "poolSize": 5,
+      "user": "monitor",
+      "pass": "m0n1t0r",
+      "promiseLibrary": "global.Promise",
+      "auth": {
+         "authdb": "admin"
+      }
+    }
+  },
+  "twitter": {
+    
+  }
+}

@@ -1,0 +1,18 @@
+version: "2"
+services:
+  cron:
+    build: ./services/cron
+    volumes:
+      - ./services:/services
+    depends_on:
+      - mongo
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: monitor
+      MONGO_INITDB_ROOT_PASSWORD: m0n1t0r
+      MONGO_INITDB_DATABASE: monitor
+    ports:
+      - "27017:27017"
