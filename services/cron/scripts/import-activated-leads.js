@@ -20,7 +20,7 @@ function handleErrors(err) {
     err.writeErrors.forEach(writeError => {
       if(writeError.code === 11000) {
         let record = writeError.toJSON().op;
-        Lead.findOneAndUpdate({ id: record.id, owner: record.owner }, { $set: { activated_on: new Date() } }, { new: true, upsert: false }, (err, result) => {
+        Lead.findOneAndUpdate({ id: record.id, owner: record.owner }, { $set: { activated_on: new Date(), last_seen_on: new Date() } }, { new: true, upsert: false }, (err, result) => {
           if(err) console.log(err)
           // console.log(`>> Updated ${result.id} ${result.owner} ${result.activated_on}`)
         });
@@ -42,7 +42,8 @@ watcherService.findUsers({import_next_cursor : { $ne: 0 }, friend_next_cursor : 
       console.log(`>> ${user.screen_name} importing ${result.users.length} next ${result.next_cursor}`);
       // Link to user
       result.users.forEach(lead => {
-        lead.owner = user.screen_name
+        lead.owner = user.screen_name;
+        lead.last_seen_on = new Date()
         lead.activated_on = new Date()
       });
       // Save new followers

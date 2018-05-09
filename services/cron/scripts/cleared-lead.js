@@ -11,14 +11,14 @@ watcherService.findUsers({import_next_cursor : { $eq: 0 }, friend_next_cursor : 
   users.forEach(user => {
     let stream = new FollowStream(user.credentials);
 
-    stream.checkFollowers(user.screen_name, -1).then(result => {
+    stream.checkFriends(user.screen_name, -1).then(result => {
       console.log(`>> Found ${result.ids.length}`);
-      Lead.update({ id: { $in: result.ids}, owner: user.screen_name}, { last_seen_on: new Date()}, { multi: true }, (err, raw) => {
+      Lead.update({ id: { $nin: result.ids}, owner: user.screen_name, adquired_on: { $exists: true }, activated_on: { $exists: false } }, { cleared_on: new Date() }, { multi: true }, (err, raw) => {
         if(err) console.log(err);
         console.log(`>> Requested ${raw.n} updated ${raw.nModified}`);
         watcherService.close();
       });
-    });
+    })
 
   });
 })

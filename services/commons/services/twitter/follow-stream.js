@@ -15,6 +15,16 @@ class Stream  extends Twit {
     });
   }
 
+  checkFriends(screenName, cursor) {
+    return new Promise((resolve, reject) => {
+      console.log(`>> Fetching ${screenName} @${cursor}`)
+      this.get('friends/ids', { screen_name: screenName, cursor: cursor, count: 5000 }, (err, data, response) => {
+        if(err) reject(err);
+        resolve(data)
+      });
+    });
+  }
+
   fetchFollowers(screenName, cursor) {
     return new Promise((resolve, reject) => {
       console.log(`>> Fetching ${screenName} @${cursor}`)

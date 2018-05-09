@@ -27,20 +27,24 @@ function findAndUpdateMissing(stream, missing, screenName) {
     let ids = users.map(user => user.id);
     let notFound = missing.filter(m => !ids.includes(m))
 
-    // Push missing
-    notFound.forEach(id => {
-      users.push({
-        id: id,
-        id_str: `${id}`,
-        owner: screenName,
-        activated_on: now
-      });
-    });
+    // // Push missing
+    // notFound.forEach(id => {
+    //   users.push({
+    //     id: id,
+    //     id_str: `${id}`,
+    //     owner: screenName,
+    //     activated_on: now
+    //   });
+    // });
 
     users.forEach(newUser => {
       newUser.owner = screenName;
+      newUser.targeted_on = now;
+      newUser.adquired_on = now;
       newUser.activated_on = now;
     });
+
+    console.log(users);
 
     // Save new followers
     watcherService.batchInsert(Lead, users).then(docs =>{
@@ -58,7 +62,8 @@ function setupUser(user) {
   // Bring all followers IDs
   stream.checkFollowers(user.screen_name, -1).then(followers => { // user.setup_next_cursor
     // Bring all leads
-    watcherService.findLeads({ activated_on: { $exists: true } }, followers.ids.length).then( leads => {
+    watcherService.findLeads({ activated_on: { $exists: true }, screen_name: { $exists: true} }, 1000)
+    .then( leads => {
         console.log(`>> ${followers.ids.length} v. ${leads.length}`);
 
         let ids = leads.map(lead => lead.id);
