@@ -20,15 +20,46 @@ class WatcherService extends DatabaseService {
     });
   }
 
-  findLeads(filter, limit, sort) {
+  findLeadAndCount(filter, limit, offset, sort) {
+    let _self = this;
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        _self.findLeads(filter, limit, offset, sort),
+        _self.countLeads(filter)
+      ]).then(result => {
+        resolve({
+          leads: result[0],
+          count: result[1]
+        });
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
+
+  findLeads(filter, limit, offset, sort) {
+    console.log(sort)
     return new Promise((resolve, reject) => {
       Lead
       .find(filter)
       .limit(limit || 20)
+      .skip(offset)
       .sort(sort)
       .exec((err, users) => {
         if (err) reject(err);
         resolve(users);
+      });
+    });
+  }
+
+  countLeads(filter) {
+    return new Promise((resolve, reject) => {
+      Lead
+      .find(filter)
+      .count()
+      .exec((err, count) => {
+        if (err) reject(err);
+        resolve(count);
       });
     });
   }

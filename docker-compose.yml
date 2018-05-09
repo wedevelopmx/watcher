@@ -1,5 +1,15 @@
 version: "2"
 services:
+  portal:
+    build: ./services/portal
+    volumes:
+      - ./services:/services
+    ports:
+      - "80:80"
+    depends_on:
+      - mongo
+    links:
+      - mongo
   cron:
     build: ./services/cron
     volumes:

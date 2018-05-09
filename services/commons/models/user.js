@@ -13,6 +13,13 @@ var User = new Schema({
     access_token_secret: String,
     timeout_ms: Number
   },
+  twitter: {
+    id: String,
+    token: String,
+    username: String,
+    displayName: String,
+    avatar: String
+  },
   import_next_cursor: { type: Number, default: -1},
   friend_next_cursor: { type: Number, default: -1}
 });

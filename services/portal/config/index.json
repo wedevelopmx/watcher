@@ -1,0 +1,20 @@
+{
+  "mongo": {
+    "uri": "mongodb://mongo/monitor",
+    "options": {
+      "native_parser": true,
+      "poolSize": 5,
+      "user": "monitor",
+      "pass": "m0n1t0r",
+      "promiseLibrary": "global.Promise",
+      "auth": {
+         "authdb": "admin"
+      }
+    }
+  },
+  "twitter": {
+    "consumerKey"     : "cYCSRy020QBnTrbKV099ounxC",
+    "consumerSecret"  : "7DsflCNOdZO4BCpjDGZtwbjxaagZslHBxF4qxss0hpmpQ7k6Mr",
+    "callbackURL"     : "http://192.168.99.100:80/auth/twitter/callback"
+  }
+}
