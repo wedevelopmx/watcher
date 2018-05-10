@@ -3,13 +3,17 @@ const Twit = require('twit')
 class LeadStream extends Twit {
   constructor(config) {
     super(config);
-    this.stream('user', { stringify_friend_ids: true });
+    this.stream = this.stream('user', { stringify_friend_ids: true });
   }
 
   start() {
-    this.on('follow', this.onFollow.bind(this));
+    this.stream.on('follow', this.onFollow.bind(this));
 
-    this.on('unfollow', this.onUnfollow.bind(this));
+    this.stream.on('unfollow', this.onUnfollow.bind(this));
+  }
+
+  on(event, fnc) {
+    this.stream.on(event, fnc);
   }
 
   onFollow(data) {

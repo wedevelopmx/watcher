@@ -9,7 +9,7 @@ const watcherService = new WatcherService(config.mongo.uri, config.mongo.options
 
 function save(lead) {
   // Find the document
-  Lead.findOneAndUpdate({ id: lead.id }, lead, { upsert: false }, function(error, result) {
+  Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(error, result) {
     if (!error) {
       // If the document doesn't exist
       if (!result) {

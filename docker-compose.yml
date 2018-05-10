@@ -28,6 +28,16 @@ services:
     links:
       - mongo
       - rabbit
+  gatekeeper:
+    build: ./services/gatekeeper
+    volumes:
+      - ./services:/services
+    depends_on:
+      - mongo
+      - rabbit
+    links:
+      - mongo
+      - rabbit
   funnel:
     build: ./services/funnel
     volumes:
