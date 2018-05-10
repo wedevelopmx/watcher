@@ -26,6 +26,11 @@
         <tr>
           <td>
             <img src="<%- account.profile_image_url_https%>" class="rounded-circle"/>
+            <% if(account.cleared_on) { %>
+              <span class="badge badge-danger badge-pill">&nbsp;</span>
+            <% } else if( account.activated_on ) { %>
+              <span class="badge badge-success badge-pill">&nbsp;</span>
+            <% } %>
           </td>
           <td>
             <span class="d-block font-weight-bold"><%- account.name %></span>
