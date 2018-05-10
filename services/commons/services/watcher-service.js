@@ -1,6 +1,7 @@
 const DatabaseService = require('./database-service');
 const User = require('../models/user');
 const Lead = require('../models/lead');
+const Term = require('../models/term');
 
 class WatcherService extends DatabaseService {
   constructor(uri, options) {
@@ -16,6 +17,17 @@ class WatcherService extends DatabaseService {
       .exec((err, users) => {
         if (err) reject(err);
         resolve(users);
+      });
+    });
+  }
+
+  findAllTerms(owner) {
+    return new Promise((resolve, reject) => {
+      Term
+      .find({ owner: owner })
+      .exec((err, terms) => {
+        if (err) reject(err);
+        resolve(terms);
       });
     });
   }

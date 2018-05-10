@@ -1,0 +1,7 @@
+{
+  "apps": [{
+      "name": "funnel",
+      "script": "funnel.js",
+      "watch": false
+    }]
+}
