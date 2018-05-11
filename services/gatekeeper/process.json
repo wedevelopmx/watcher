@@ -1,0 +1,7 @@
+{
+  "apps": [{
+      "name": "gatekeeper",
+      "script": "gatekeeper.js",
+      "watch": false
+    }]
+}

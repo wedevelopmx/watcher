@@ -10,6 +10,7 @@ var Lead = new Schema({
    adquired_on: { type: Date },
    activated_on: { type: Date },
    cleared_on: { type: Date },
+   received_at: { type: Date },
    id: Number,
    id_str: String,
    name: String,

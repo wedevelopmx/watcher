@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.5.2",
     "cron": "^1.3.0",
     "mongoose": "^5.0.17",
-    "twit": "^2.2.9"
+    "twit": "^2.2.9",
+    "commons": "file:commons"
   }
 }
