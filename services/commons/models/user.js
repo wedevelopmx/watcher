@@ -24,6 +24,8 @@ var User = new Schema({
   friend_next_cursor: { type: Number, default: -1}
 });
 
+User.index({ screen_name: 1, "twitter.id": -1 }, {unique: true}); // schema level
+
 // the schema is useless so far
 // we need to create a model using it
 var User = mongoose.model('User', User);

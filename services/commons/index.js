@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _user = require('./models/user');
 var _lead = require('./models/lead');
+var _term = require('./models/term');
 
 var _watcher_service = require('./services/watcher-service');
 
@@ -16,6 +17,7 @@ var _lead_stream = require('./services/twitter/lead-stream');
 exports.default = {
   User: _user,
   Lead: _lead,
+  Term: _term,
   WatcherService: _watcher_service,
   FollowStream: _follow_stream,
   TwittStream: _twitt_stream,
@@ -24,6 +26,7 @@ exports.default = {
 
 exports.User = _user;
 exports.Lead = _lead;
+exports.Term = _term;
 exports.WatcherService = _watcher_service;
 exports.FollowStream = _follow_stream;
 exports.TwittStream = _twitt_stream;

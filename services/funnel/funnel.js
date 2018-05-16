@@ -7,7 +7,7 @@ const q = { friend: 'friend', unfriend: 'unfriend', lead: 'lead', tweet: 'tweet'
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 
-function save(lead) {
+function save(lead, event) {
   // Find the document
   Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(error, result) {
     if (!error) {
@@ -23,6 +23,21 @@ function save(lead) {
                 throw error;
             }
         });
+      } else {
+
+        if(!result.hasOwnProperty(event.target))
+          result[event.target] = [];
+
+        result[event.target].unshift(result[event.source]);
+        result[event.source] = lead[event.source];
+
+        result.save(function(error) {
+            if (!error) {
+                console.log(`     Updated ${result.screen_name}`)
+            } else {
+                throw error;
+            }
+        });
       }
     }
   });
@@ -33,7 +48,7 @@ function target(msg) {
   console.log(` [X] Targeted ${payload.screen_name}`);
   // Targeted
   payload.targeted_on = new Date();
-  save(payload);
+  save(payload, { target: 'targeted_events', source: 'targeted_on' });
 }
 
 function friend(msg) {
@@ -41,7 +56,7 @@ function friend(msg) {
   console.log(` [X] Adquired ${payload.screen_name}`);
   // Adquired
   payload.adquired_on = new Date();
-  save(payload);
+  save(payload, { target: 'adquired_events', source: 'adquired_on' });
 }
 
 function unfriend(msg) {
@@ -49,15 +64,15 @@ function unfriend(msg) {
   console.log(` [X] Cleared ${payload.screen_name}`);
   // Cleared
   payload.cleared_on = new Date();
-  save(payload);
+  save(payload, { target: 'cleared_events', source: 'cleared_on' });
 }
 
 function lead(msg) {
   let payload = JSON.parse(msg.content.toString());
   console.log(` [X] Activated ${payload.screen_name}`);
   // Acived
-  payload.actived_on = new Date();
-  save(payload);
+  payload.activated_on = new Date();
+  save(payload, { target: 'activated_events', source: 'activated_on' });
 }
 
 // Monitor messages to our steam service

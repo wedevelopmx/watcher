@@ -1,6 +1,6 @@
 {
   "apps": [{
-      "name": "cron",
+      "name": "portal",
       "script": "server.js",
       "watch": false,
       "env": {
