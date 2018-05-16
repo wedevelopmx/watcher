@@ -44,7 +44,7 @@ function findAndUpdateMissing(stream, missing, screenName) {
       newUser.activated_on = now;
     });
 
-    console.log(users);
+    // console.log(users);
 
     // Save new followers
     watcherService.batchInsert(Lead, users).then(docs =>{

@@ -35,9 +35,9 @@ watcherService.findUsers({friend_next_cursor : { $ne: 0 }}, 100, {}).then(users 
     stream.fetchFriends(user.screen_name, user.friend_next_cursor)
     .then(result => {
       console.log(`>> ${user.screen_name} importing ${result.users.length} next ${result.next_cursor}`);
+      let now = new Date();
       // Link to user
       result.users.forEach(lead => {
-        let now = new Date();
         lead.owner = user.screen_name;
         lead.targeted_on = now;
         lead.adquired_on = now;

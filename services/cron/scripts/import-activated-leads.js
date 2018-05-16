@@ -40,11 +40,12 @@ watcherService.findUsers({import_next_cursor : { $ne: 0 }, friend_next_cursor : 
     stream.fetchFollowers(user.screen_name, user.import_next_cursor)
     .then(result => {
       console.log(`>> ${user.screen_name} importing ${result.users.length} next ${result.next_cursor}`);
+      let now = new Date();
       // Link to user
       result.users.forEach(lead => {
         lead.owner = user.screen_name;
-        lead.last_seen_on = new Date()
-        lead.activated_on = new Date()
+        lead.last_seen_on = now;
+        lead.activated_on = now;
       });
       // Save new followers
       watcherService.batchInsert(Lead, result.users)
