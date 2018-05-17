@@ -44,9 +44,15 @@
           </td>
           <td><%- account[events].length %></td>
           <td><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
-          <td><%- account.followers_count %></td>
-          <td><%- account.friends_count %></td>
-          <td><%- account.statuses_count %></td>
+          <td>
+            <span class="<%- utils.bg(account.followers_count) %>"><%- account.followers_count %></span>
+          </td>
+          <td>
+            <span class="<%- utils.bg(account.friends_count) %>"><%- account.friends_count %></span>
+          </td>
+          <td>
+            <span class="<%- utils.bg(account.statuses_count) %>"><%- account.statuses_count %></span>
+          </td>
         </tr>
       <% }) %>
     </tbody>

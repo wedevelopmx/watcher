@@ -5,12 +5,13 @@ const config = require('../config');
 const WatcherService = require('commons').WatcherService;
 const WatcherPipe = require('commons').WatcherPipe;
 const Term = require('commons').Term;
-const utils = { moment: moment };
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 const watcherPipe = new WatcherPipe();
 
 module.exports = function(app, passport) {
+  const utils = { moment: moment, bg: bg };
+  
   // define the home page route
   app.get('/', function (req, res) {
     res.render('index')
@@ -205,5 +206,18 @@ function pageable(req, defaultSort) {
     sortBy: sortBy,
     sort: sort,
     asc: asc
+  }
+}
+
+function bg(number) {
+  number = parseInt(number);
+  if(number > 2000) {
+    return 'text-white badge badge-danger';
+  } else if(number > 1000) {
+    return 'text-white badge badge-warning';
+  } else if(number > 100) {
+    return 'text-white badge badge-success';
+  } else {
+    return 'text-white badge badge-secondary';
   }
 }
