@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const config = require('../config');
 const WatcherService = require('commons').WatcherService;
+const Term = require('commons').Term;
 const utils = { moment: moment };
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
@@ -19,6 +20,30 @@ module.exports = function(app, passport) {
     res.render('dashboard', {
       user: req.user
     })
+  });
+  
+  app.get('/terms', isLoggedIn, function (req, res) {
+    watcherService.findAllTerms(req.user.screen_name).then(result => {
+      res.render('terms', {
+        user: req.user,
+        terms: result
+      });
+    });
+  });
+  
+  app.post('/terms', isLoggedIn, function (req, res) {
+    console.log(`>> Terms ${req.body.term.length}`);
+    
+    watcherService.batchUpdate(Term, { _id: { $in: req.body.term }}, { monitor: true }).then(() => {
+      watcherService.batchUpdate(Term, { _id: { $nin: req.body.term }}, { monitor: false }).then(() => {
+        watcherService.findAllTerms(req.user.screen_name).then(result => {
+          res.render('terms', {
+            user: req.user,
+            terms: result
+          });
+        });
+      });
+    });
   });
 
   app.get('/deactivated', isLoggedIn, function (req, res) {
