@@ -36,6 +36,7 @@ function createStream(user, ch) {
 class Producer {
   constructor(user, terms, ch) {
     console.log(`>> Stream dispatched for #${terms.length} terms`);
+    this.user = user;
     this.screen_name = user.screen_name;
     this.ch = ch;
     this.stream = new TwittStream(user, terms);
@@ -63,14 +64,16 @@ class Producer {
 
 function updateStream(ch, msg) {
   let data = JSON.parse(msg.content);
-  let stream = watchers.hasOwnProperty(data.user);
-  console.log(`>> Requesting stream to update ${data.user} `)
-  if(stream) {
-    console.log(`>> Existent steam stoped `)
-    stream.stop();
-  }
+  if(watchers.hasOwnProperty(data.user)) {
+    console.log(`>> Requesting stream to update ${data.user} `)
+    let stream = watchers[data.user];
+    if(stream) {
+      console.log(`>> Existent steam stoped `)
+      stream.stop();
+    }
 
-  createStream(data.user, ch);
+    createStream(stream.user, ch);
+  }
 }
 
 function bringStreamUp(msg) {

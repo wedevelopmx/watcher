@@ -3,11 +3,12 @@ const express = require('express');
 const router = express.Router();
 const config = require('../config');
 const WatcherService = require('commons').WatcherService;
+const WatcherPipe = require('commons').WatcherPipe;
 const Term = require('commons').Term;
 const utils = { moment: moment };
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
-
+const watcherPipe = new WatcherPipe();
 
 module.exports = function(app, passport) {
   // define the home page route
@@ -41,6 +42,8 @@ module.exports = function(app, passport) {
             user: req.user,
             terms: result
           });
+          
+          watcherPipe.listenerUpdate(req.user.screen_name);
         });
       });
     });
