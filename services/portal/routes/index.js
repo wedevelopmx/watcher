@@ -1,10 +1,12 @@
-// const moment = require('moment');
+const moment = require('moment');
 const express = require('express');
 const router = express.Router();
 const config = require('../config');
 const WatcherService = require('commons').WatcherService;
+const utils = { moment: moment };
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
+
 
 module.exports = function(app, passport) {
   // define the home page route
@@ -17,7 +19,7 @@ module.exports = function(app, passport) {
     res.render('dashboard', {
       user: req.user
     })
-  })
+  });
 
   app.get('/deactivated', isLoggedIn, function (req, res) {
     let field = 'cleared_on';
@@ -29,20 +31,18 @@ module.exports = function(app, passport) {
     .findLeadAndCount({ owner: userName, activated_on: { $exists: true}, last_seen_on: { $lte: now } }, page.size, page.offset, page.sort)
     .then(result => {
       console.log(`>> Displaying ${ result.leads.length} of ${result.count}`)
-      res.render('leads', {
+      res.render('leads', Object.assign({
         user: req.user,
         accounts: result.leads,
+        count: result.count,
         resource: 'deactivated',
         date: {
           display: 'Unfollow',
           field: field
         },
-        count: result.count,
-        size: page.size,
-        offset: page.offset,
-        sortBy: page.sortBy,
-        asc: page.asc
-      });
+        events: 'deactivated_events',
+        utils: utils
+      }, page));
     });
   });
 
@@ -57,20 +57,18 @@ module.exports = function(app, passport) {
     .findLeadAndCount({ owner: userName, activated_on: { $exists: true}, last_seen_on: { $gte: now } }, page.size, page.offset, page.sort)
     .then(result => {
       console.log(`>> Displaying ${ result.leads.length} of ${result.count}`)
-      res.render('leads', {
+      res.render('leads', Object.assign({
         user: req.user,
         accounts: result.leads,
+        count: result.count,
         resource: 'Activated',
         date: {
           display: 'activated',
           field: field
         },
-        count: result.count,
-        size: page.size,
-        offset: page.offset,
-        sortBy: page.sortBy,
-        asc: page.asc
-      });
+        events: 'activated_events',
+        utils: utils
+      }, page));
     });
   });
 
@@ -84,20 +82,18 @@ module.exports = function(app, passport) {
     .findLeadAndCount({ owner: userName, adquired_on: { $exists: true }, cleared_on: { $exists: false } }, page.size, page.offset, page.sort)
     .then(result => {
       console.log(`>> Displaying ${ result.leads.length} of ${result.count}`)
-      res.render('leads', {
+      res.render('leads', Object.assign({
         user: req.user,
         accounts: result.leads,
+        count: result.count,
         resource: 'adquired',
         date: {
           display: 'Adquired',
           field: field
         },
-        count: result.count,
-        size: page.size,
-        offset: page.offset,
-        sortBy: page.sortBy,
-        asc: page.asc
-      });
+        events: 'adquired_events',
+        utils: utils
+      }, page));
     });
   });
 
@@ -116,20 +112,18 @@ module.exports = function(app, passport) {
     }, page.size, page.offset, page.sort)
     .then(result => {
       console.log(`>> Displaying ${ result.leads.length} of ${result.count}`)
-      res.render('leads', {
+      res.render('leads', Object.assign({
         user: req.user,
         accounts: result.leads,
+        count: result.count,
         resource: 'target',
         date: {
           display: 'Target',
           field: field
         },
-        count: result.count,
-        size: page.size,
-        offset: page.offset,
-        sortBy: page.sortBy,
-        asc: page.asc
-      });
+        events: 'targeted_events',
+        utils: utils
+      }, page));
     });
   });
 

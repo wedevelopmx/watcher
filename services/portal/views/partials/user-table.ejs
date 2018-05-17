@@ -42,8 +42,8 @@
               @<%- account.screen_name %>
             </a>
           </td>
-          <td></td>
-          <td></td>
+          <td><%- account[events].length %></td>
+          <td><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
           <td><%- account.followers_count %></td>
           <td><%- account.friends_count %></td>
           <td><%- account.statuses_count %></td>
