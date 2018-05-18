@@ -101,7 +101,7 @@ module.exports = function(app, passport) {
           display: 'Unfollow',
           field: field
         },
-        events: 'deactivated_events',
+        events: 'cleared_events',
         utils: utils
       }, page));
     });
