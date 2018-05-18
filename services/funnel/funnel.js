@@ -24,13 +24,12 @@ function save(lead, event) {
             }
         });
       } else {
-
-        if(!result.hasOwnProperty(event.target))
+        if(!result[event.target])
           result[event.target] = [];
 
         result[event.target].unshift(result[event.source]);
         result[event.source] = lead[event.source];
-
+        
         result.save(function(error) {
             if (!error) {
                 console.log(`     Updated ${result.screen_name}`)
