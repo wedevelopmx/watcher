@@ -65,6 +65,7 @@ function inspect(user) {
   });
 }
 
+console.log(new Date());
 // Fetch All users
 watcherService.findUsers({}, 100, {}).then(users => {
   console.log(`>> Users ${users.length}`);
