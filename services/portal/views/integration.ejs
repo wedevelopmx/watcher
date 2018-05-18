@@ -1,0 +1,112 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+
+    <style type="text/css">/* Chart.js */
+      @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}
+    </style>
+  </head>
+  <body>
+    <%- include partials/navbar %>
+
+    <div class="container-fluid">
+      <div class="row">
+        <%- include partials/sidebar %>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-inline-block align-top">
+                <img class="rounded-circle" src="<%- user.twitter.avatar%>"/>
+              </div>
+              <div class="d-inline-block pl-3">
+                <h1 class="h5 mb-0"><%-user.twitter.displayName%></h1>
+                <a href="https://twitter.com/<%- user.twitter.username%>" class="h6 text-secondary">@<%-user.twitter.username%></a>
+              </div>
+            </div>
+            <div class="card-body">
+              <h2 class="h4">Twitter Integration</h2>
+              <hr/>
+              <form method="post" action="/integration" >
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Consumer Key</label>
+                  <input type="text" class="form-control" name="consumer_key" value="<%- user.credentials.consumer_key%>" placeholder="Consumer key">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Consumer Secret</label>
+                  <input type="text" class="form-control" name="consumer_secret" value="<%- user.credentials.consumer_secret%>"placeholder="Consumer secret">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Access Token</label>
+                  <input type="text" class="form-control" name="access_token" value="<%- user.credentials.access_token%>"placeholder="Access token">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Access Token Secred</label>
+                  <input type="text" class="form-control" name="access_token_secret" value="<%- user.credentials.access_token_secret%>" placeholder="Access token secret">
+                </div>
+                <button type="submit" class="btn btn-primary float-right">Save</button>
+              </form>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          datasets: [{
+            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            borderColor: '#007bff',
+            borderWidth: 4,
+            pointBackgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          },
+          legend: {
+            display: false,
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
