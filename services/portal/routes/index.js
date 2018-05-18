@@ -130,13 +130,13 @@ module.exports = function(app, passport) {
     let field = 'targeted_on';
     let page = pageable(req, field);
     let userName = req.user.twitter.username;
-    let now = today();
 
     watcherService
     .findLeadAndCount({
       owner: userName,
       followers_count: { $gte: page.filter.followers_count },
       targeted_on: {$exists: true},
+      received_at: { $lt: new Date(Date.now() - (page.delay * 60000)) },
       $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
     }, page.size, page.offset, page.sort)
     .then(result => {
@@ -190,10 +190,13 @@ function today() {
   return now;
 }
 
+
+
 function pageable(req, defaultSort) {
   let sort = {};
   let asc = req.query.asc && req.query.asc == 'true' ? true : false;
   let sortBy = req.query.sort || defaultSort ||'followers_count';
+  let delay = req.query.delay && req.query.delay == 'false' ? 0 : 5;
   let followers_count = req.query.followers_count || 50;
   sort[sortBy] = asc ? 1 : -1;
 
@@ -205,7 +208,8 @@ function pageable(req, defaultSort) {
     },
     sortBy: sortBy,
     sort: sort,
-    asc: asc
+    asc: asc,
+    delay: delay
   }
 }
 
