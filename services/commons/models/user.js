@@ -21,7 +21,8 @@ var User = new Schema({
     avatar: String
   },
   import_next_cursor: { type: Number, default: -1},
-  friend_next_cursor: { type: Number, default: -1}
+  friend_next_cursor: { type: Number, default: -1},
+  welcome: { type: String, default: 'Thanks for following me!'}
 });
 
 User.index({ screen_name: 1, "twitter.id": -1 }, {unique: true}); // schema level

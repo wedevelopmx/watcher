@@ -5,7 +5,7 @@ console.log(`>> ${new Date()} Service up`);
 
 
 let cronjobs = [
-  { name: 'datetime', schedule: '00 */2 * * * *', command: 'echo datetime >> log/datetime.log'}
+  { name: 'datetime', schedule: '00 */15 * * * *', command: 'node scripts/dm.js >> log/dm.log'}
 ];
 
 cronjobs.forEach(cronjob => {
