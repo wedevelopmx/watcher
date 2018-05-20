@@ -14,6 +14,7 @@ var _watcher_pipe = require('./services/watcher-pipe');
 var _follow_stream = require('./services/twitter/follow-stream');
 var _twitt_stream = require('./services/twitter/twitt-stream');
 var _lead_stream = require('./services/twitter/lead-stream');
+var _twit_messenger = require('./services/twitter/twit-messenger');
 
 exports.default = {
   User: _user,
@@ -23,7 +24,8 @@ exports.default = {
   WatcherPipe: _watcher_pipe,
   FollowStream: _follow_stream,
   TwittStream: _twitt_stream,
-  LeadStream: _lead_stream
+  LeadStream: _lead_stream,
+  TwitMessenger: _twit_messenger
 }
 
 exports.User = _user;
@@ -34,3 +36,4 @@ exports.WatcherPipe = _watcher_pipe;
 exports.FollowStream = _follow_stream;
 exports.TwittStream = _twitt_stream;
 exports.LeadStream = _lead_stream;
+exports.TwitMessenger = _twit_messenger;
