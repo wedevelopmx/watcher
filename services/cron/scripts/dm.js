@@ -1,3 +1,4 @@
+const config = require('../config');
 const WatcherService = require('commons').WatcherService;
 const TwitMessenger = require('commons').TwitMessenger;
 
