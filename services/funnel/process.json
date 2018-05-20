@@ -3,5 +3,9 @@
       "name": "funnel",
       "script": "funnel.js",
       "watch": false
+    }, {
+      "name": "analytics",
+      "script": "analytics.js",
+      "watch": false
     }]
 }

@@ -3,51 +3,54 @@ const amqp = require('amqplib/callback_api');
 
 const Lead = require('commons').Lead;
 const WatcherService = require('commons').WatcherService;
-const q = { friend: 'friend', unfriend: 'unfriend', lead: 'lead', tweet: 'tweet', target: 'target' }
+const q = { friend: 'friend', unfriend: 'unfriend', lead: 'lead', tweet: 'tweet', target: 'target', analytics: 'analytics' };
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 
 function save(lead, event) {
-  // Find the document
-  Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(error, result) {
-    if (!error) {
-      // If the document doesn't exist
-      if (!result) {
-        // Create it
-        result = new Lead(lead);
-        // Save the document
-        result.save(function(error) {
-            if (!error) {
-                console.log(`     Saved ${result.screen_name}`)
-            } else {
-                throw error;
-            }
-        });
+  return new Promise((resolve, reject) => {
+    // Find the document
+    Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(error, result) {
+      if(error) { 
+        reject(err); 
       } else {
+        // If the document doesn't exist
+        if (!result) {
+          // Create it
+          result = new Lead(lead);
+        } 
+        
+        // Update event array
         if(!result[event.target])
           result[event.target] = [];
-
         result[event.target].unshift(result[event.source]);
         result[event.source] = lead[event.source];
+      
         
+        // Save the document
         result.save(function(error) {
-            if (!error) {
-                console.log(`     Updated ${result.screen_name}`)
-            } else {
-                throw error;
-            }
+            if(error) reject(error);
+            resolve(result);
         });
       }
-    }
+    });
   });
 }
 
-function target(msg) {
+function target(ch, msg) {
   let payload = JSON.parse(msg.content.toString());
   console.log(` [X] Targeted ${payload.screen_name}`);
   // Targeted
   payload.targeted_on = new Date();
-  save(payload, { target: 'targeted_events', source: 'targeted_on' });
+  save(payload, { target: 'targeted_events', source: 'targeted_on' }).then(result => {
+    if(result.stats.tw + result.stats.rt + result.stats.rp < 0.8) {
+      // console.log(`>> ${result.screen_name} stats total: ${result.stats.tw + result.stats.rt + result.stats.rp}`);
+      // Ready to run analytics on user
+      ch.sendToQueue(q.analytics, new Buffer(JSON.stringify(result)));
+    } else {
+      console.log(`>> Already have analytics for ${result.screen_name}!`)
+    }
+  });
 }
 
 function friend(msg) {
@@ -88,11 +91,12 @@ amqp.connect(uri, function(err, conn) {
       ch.assertQueue(q.unfriend, {durable: false});
       ch.assertQueue(q.lead, {durable: false});
       ch.assertQueue(q.target, {durable: false});
+      ch.assertQueue(q.analytics, {durable: false});
 
       ch.consume(q.friend, friend, {noAck: true});
       ch.consume(q.unfriend, unfriend, {noAck: true});
       ch.consume(q.lead, lead, {noAck: true});
-      ch.consume(q.target, target, {noAck: true});
+      ch.consume(q.target, target.bind(this, ch), {noAck: true});
     });
   }
 });

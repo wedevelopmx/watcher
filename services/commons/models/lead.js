@@ -15,6 +15,11 @@ var Lead = new Schema({
    adquired_events: [Date],
    activated_events: [Date],
    cleared_events: [Date],
+   stats: {
+     tw: { type: Number, default: 0},
+     rt: { type: Number, default: 0},
+     rp: { type: Number, default: 0}
+   },
    id: Number,
    id_str: String,
    name: String,
