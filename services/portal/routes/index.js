@@ -11,7 +11,7 @@ const watcherService = new WatcherService(config.mongo.uri, config.mongo.options
 const watcherPipe = new WatcherPipe();
 
 module.exports = function(app, passport) {
-  const utils = { moment: moment, bg: bg };
+  const utils = { moment: moment, bg: bg, money: money };
   
   // define the home page route
   app.get('/', function (req, res) {
@@ -256,4 +256,10 @@ function bg(number) {
   } else {
     return 'text-white badge badge-secondary';
   }
+}
+
+function money(number) {
+  if(number)
+    return number.toFixed().replace(/(\d)(?=(\d{3})+(,|$))/g, '$1,');
+  return "?";
 }

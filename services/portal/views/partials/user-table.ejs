@@ -37,26 +37,26 @@
             <% } %>
           </td>
           <td>
-            <span class="d-flex" style="font-size: 5px;">
-              <span class="badge badge-success" style="width:<%- account.stats.tw%>%;">&nbsp;</span>
-              <span class="badge badge-warning" style="width:<%- account.stats.rp%>%;">&nbsp;</span>
-              <span class="badge badge-danger" style="width:<%- account.stats.rt%>%;">&nbsp;</span>
-            </span>
             <span class="d-block pt-2 font-weight-bold"><%- account.name %></span>
             <a href="https://twitter.com/<%- account.screen_name %>" target="_blank" class="d-block text-secondary">
               @<%- account.screen_name %>
             </a>
           </td>
-          <td class="align-middle"><%- account[events].length %></td>
-          <td class="align-middle"><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
-          <td class="align-middle">
-            <span class="<%- utils.bg(account.followers_count) %>"><%- account.followers_count %></span>
+          <td class="align-middle text-center"><%- account[events].length %></td>
+          <td class="align-middle text-center"><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
+          <td class="align-middle text-center">
+            <span class="<%- utils.bg(account.followers_count) %>"><%- utils.money(account.followers_count) %></span>
           </td>
-          <td class="align-middle">
-            <span class="<%- utils.bg(account.friends_count) %>"><%- account.friends_count %></span>
+          <td class="align-middle text-center">
+            <span class="<%- utils.bg(account.friends_count) %>"><%- utils.money(account.friends_count) %></span>
           </td>
-          <td class="align-middle">
-            <span class="<%- utils.bg(account.statuses_count) %>"><%- account.statuses_count %></span>
+          <td class="align-middle text-center">
+            <span class="d-flex mb-2" style="font-size: 10px;">
+              <span class="badge badge-success" style="width:<%- account.stats.tw%>%;">&nbsp;</span>
+              <span class="badge badge-warning" style="width:<%- account.stats.rp%>%;">&nbsp;</span>
+              <span class="badge badge-danger" style="width:<%- account.stats.rt%>%;">&nbsp;</span>
+            </span>
+            <span style="font-size: 75%"><%- utils.money(account.statuses_count) %></span>
           </td>
         </tr>
       <% }) %>
