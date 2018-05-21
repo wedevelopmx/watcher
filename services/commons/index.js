@@ -16,6 +16,7 @@ var _twitt_stream = require('./services/twitter/twitt-stream');
 var _lead_stream = require('./services/twitter/lead-stream');
 var _twit_messenger = require('./services/twitter/twit-messenger');
 var _timeline = require('./services/twitter/timeline');
+var _unfollower = require('./services/twitter/unfollower');
 
 exports.default = {
   User: _user,
@@ -27,7 +28,8 @@ exports.default = {
   TwittStream: _twitt_stream,
   LeadStream: _lead_stream,
   TwitMessenger: _twit_messenger,
-  Timeline: _timeline
+  Timeline: _timeline,
+  Unfollower: _unfollower
 }
 
 exports.User = _user;
@@ -40,3 +42,4 @@ exports.TwittStream = _twitt_stream;
 exports.LeadStream = _lead_stream;
 exports.TwitMessenger = _twit_messenger;
 exports.Timeline = _timeline;
+exports.Unfollower = _unfollower;

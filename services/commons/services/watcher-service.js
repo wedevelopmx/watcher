@@ -50,7 +50,6 @@ class WatcherService extends DatabaseService {
   }
 
   findLeads(filter, limit, offset, sort) {
-    console.log(sort)
     return new Promise((resolve, reject) => {
       Lead
       .find(filter)
