@@ -35,7 +35,7 @@ function processLead(stream, lead) {
 }
 
 function processUser(user) {
-  let stream = new Timeline(config.user.credentials);
+  let stream = new Timeline(user.credentials);
   watcherService.findLeads({ owner: user.screen_name, 'stats.tw': 0, 'stats.rt': 0, 'stats.rp': 0 }, 5).then(leads => {
     console.log(`>> Inspecting ${leads.length} leads`)
     leads.forEach(lead => processLead(stream, lead));
