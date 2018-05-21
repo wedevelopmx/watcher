@@ -57,7 +57,7 @@ module.exports = function(app, passport) {
   });
   
   app.get('/terms', isLoggedIn, function (req, res) {
-    watcherService.findAllTerms(req.user.screen_name).then(result => {
+    watcherService.findAllTerms(req.user.twitter.username).then(result => {
       res.render('terms', {
         user: req.user,
         terms: result
@@ -70,13 +70,13 @@ module.exports = function(app, passport) {
     
     watcherService.batchUpdate(Term, { _id: { $in: req.body.term }}, { monitor: true }).then(() => {
       watcherService.batchUpdate(Term, { _id: { $nin: req.body.term }}, { monitor: false }).then(() => {
-        watcherService.findAllTerms(req.user.screen_name).then(result => {
+        watcherService.findAllTerms(req.user.twitter.username).then(result => {
           res.render('terms', {
             user: req.user,
             terms: result
           });
           
-          watcherPipe.listenerUpdate(req.user.screen_name);
+          watcherPipe.listenerUpdate(req.user.twitter.username);
         });
       });
     });
