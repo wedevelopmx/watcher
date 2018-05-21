@@ -6,7 +6,9 @@ console.log(`>> ${new Date()} Service up`);
 
 let cronjobs = [
   { name: 'datetime', schedule: '00 */15 * * * *', command: 'node scripts/dm.js >> log/dm.log'},
-  { name: 'unfollow', schedule: '00 */15 * * * *', command: 'node scripts/unfollow.js >> log/unfollow.log'}
+  { name: 'unfollow', schedule: '00 */15 * * * *', command: 'node scripts/unfollow.js >> log/unfollow.log'},
+  { name: 'analytics', schedule: '00 * */1 * * *', command: 'node scripts/user-analytics.js >> log/user-analytics.log'},
+  { name: 'last-seen', schedule: '00 * 7 * * *', command: 'node scripts/last-seen-lead.js >> log/last-seen-lead.log'}
 ];
 
 cronjobs.forEach(cronjob => {

@@ -1,27 +1,9 @@
-const Twit = require('twit');
 const config = require('../config');
+const WatcherService = require('commons').WatcherService;
+const Timeline = require('commons').Timeline;
+const Lead = require('commons').Lead;
 
-class Timeline extends Twit {
-  constructor(credentials) {
-    super(credentials);
-  }
-  
-  fetchTimeline(screen_name, since) {
-      let filter = { screen_name: screen_name, since_id: since, count: 200, include_rts: true, exclude_replies: false };
-      return new Promise((resolve, reject) => {
-        this.get('statuses/user_timeline', filter, (err, data, response) => {
-          if(err) reject(err);
-          resolve(data);
-        });
-      });
-  }
-}
-
-
-
-let stream = new Timeline(config.user.credentials);
-
-stream.fetchTimeline('srrobo').then(tweets => {
+function analize(tweets) {
   let rt = 0, reply = 0, twit = 0;
   tweets.forEach(tweet => {
     // console.log(`>> ${tweet.text}`);
@@ -34,5 +16,35 @@ stream.fetchTimeline('srrobo').then(tweets => {
     }
   });
   
-  console.log(`>> T:${ (100*twit/tweets.length).toFixed(2) }% RT:${ (100*rt/tweets.length).toFixed(2) }% R:${ (100*reply/tweets.length).toFixed(2) }% `)
-})
+  return {
+    tw: (100*twit/tweets.length).toFixed(2),
+    rt: (100*rt/tweets.length).toFixed(2),
+    rp: (100*reply/tweets.length).toFixed(2)
+  };
+}
+
+function processLead(stream, lead) {
+  stream.fetchTimeline(lead.screen_name)
+  .then(tweets => {
+    lead.stats = analize(tweets);
+    Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(err, result) {
+      if(err) console.log(err);
+      console.log(`>> Saving ${lead.screen_name}`);
+    });
+  })
+}
+
+function processUser(user) {
+  let stream = new Timeline(config.user.credentials);
+  watcherService.findLeads({ owner: user.screen_name, 'stats.tw': 0, 'stats.rt': 0, 'stats.rp': 0 }, 5).then(leads => {
+    console.log(`>> Inspecting ${leads.length} leads`)
+    leads.forEach(lead => processLead(stream, lead));
+  });
+}
+
+let watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
+
+watcherService.findUsers({}, 100).then(users => {
+  console.log(`>> Found ${users.length} users`);
+  users.forEach(processUser)
+;});
