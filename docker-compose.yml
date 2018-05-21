@@ -50,6 +50,8 @@ services:
       - rabbit
   mongo:
     image: mongo
+    volumes:
+      - ./data/db/mongo:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: monitor
       MONGO_INITDB_ROOT_PASSWORD: m0n1t0r
