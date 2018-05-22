@@ -53,9 +53,9 @@
           </td>
           <td class="align-middle text-center">
             <span class="d-flex mb-2" style="font-size: 10px;">
-              <span class="badge badge-success" style="width:<%- account.stats.tw%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.tw%>%">&nbsp;</span>
-              <span class="badge badge-warning" style="width:<%- account.stats.rp%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rp%>%">&nbsp;</span>
-              <span class="badge badge-danger" style="width:<%- account.stats.rt%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rt%>%">&nbsp;</span>
+              <span class="badge badge-success <%- account.stats.tw === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.tw%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.tw%>%">&nbsp;</span>
+              <span class="badge badge-warning  <%- account.stats.rp === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rp%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rp%>%">&nbsp;</span>
+              <span class="badge badge-danger  <%- account.stats.rt === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rt%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rt%>%">&nbsp;</span>
             </span>
             <span style="font-size: 75%"><%- utils.money(account.statuses_count) %></span>
           </td>
