@@ -37,7 +37,7 @@
             <% } %>
           </td>
           <td>
-            <span class="d-block pt-2 font-weight-bold"><%- account.name %></span>
+            <span class="d-block pt-2 font-weight-bold"><%- account.name.length > 20 ? account.name.substring(0,20) + '...' : account.name %></span>
             <a href="https://twitter.com/<%- account.screen_name %>" target="_blank" class="d-block text-secondary">
               @<%- account.screen_name %>
             </a>
