@@ -86,7 +86,7 @@ module.exports = function(app, passport) {
     let field = 'cleared_on';
     let page = pageable(req, field);
     let userName = req.user.twitter.username;
-    let now = today(field);
+    let now = today();
 
     watcherService
     .findLeadAndCount({ owner: userName, activated_on: { $exists: true}, last_seen_on: { $lte: now } }, page.size, page.offset, page.sort)
@@ -111,7 +111,7 @@ module.exports = function(app, passport) {
     let field = 'activated_on';
     let page = pageable(req, field);
     let userName = req.user.twitter.username;
-    let now = today(field);
+    let now = today();
 
     // last_seen_on: { $gte: now }
     watcherService
@@ -137,7 +137,7 @@ module.exports = function(app, passport) {
     let field = 'adquired_on';
     let page = pageable(req, field);
     let userName = req.user.twitter.username;
-    let now = today(field);
+    let now = today();
 
     watcherService
     .findLeadAndCount({ owner: userName, adquired_on: { $exists: true }, cleared_on: { $exists: false } }, page.size, page.offset, page.sort)
@@ -216,13 +216,8 @@ function isLoggedIn(req, res, next) {
 }
 
 function today() {
-  let now = new Date();
-  now.setHours(0);
-  now.setMinutes(0);
-  return now;
+  return new Date(Date.now() - 3600000);
 }
-
-
 
 function pageable(req, defaultSort) {
   let sort = {};
