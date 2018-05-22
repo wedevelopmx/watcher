@@ -28,6 +28,7 @@ function processUser(user) {
     logger.debug(`Processing user ${user.screen_name}`);
     // Find a lead who has been adquired, not cleared nor activated
     watcherService.findLeads({ 
+        owner: user.screen_name,
         adquired_on: {$exists: true}, 
         cleared_on: {$exists: false}, 
         activated_on: {$exists: false}
@@ -35,14 +36,14 @@ function processUser(user) {
         1, 0, 
         { adquired_on: 1, followers_count: 1 }
       ).then(leads => {
-        logger.debug(`Found ${leads.lenght} leads`)
+        logger.debug(`Found ${leads.length} leads`)
         if(leads.length > 0) {
-          resolve(unfollow(user, lead[0]));
+          resolve(unfollow(user, leads[0]));
         } else {
           reject(false);
         }
       })
-      .error(err => reject(err));
+      .catch(err => reject(err));
   });
 }
 
