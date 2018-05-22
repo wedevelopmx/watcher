@@ -1,36 +1,63 @@
+const log4js = require('log4js');
 const config = require('../config');
 const WatcherService = require('commons').WatcherService;
 const Unfollower = require('commons').Unfollower;
 const Lead = require('commons').Lead;
 
-function updateLead(lead) {
-  lead.cleared_on = new Date();
-  Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(err, result) {
-    if(err) console.log(err);
-    console.log(`>> Updated ${lead.screen_name}`);
-    watcherService.close();
+function unfollow(user, lead) {
+  return new Promise((resolve, reject) => {
+    let unfollower = new Unfollower(user.credentials);
+    // Unfollow  
+    unfollower.unfollow(lead.screen_name)
+    .then(() => {
+      logger.debug(`Unfollow ${lead.screen_name} [${lead.followers_count}]`);
+      // Update
+      lead.cleared_on = new Date();
+      Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(err, result) {
+        if(err) reject(err);
+        logger.debug(`Updated ${lead.screen_name}`);
+        resolve(result);
+      });  
+    })
+    .catch(err => reject(err));
   });
 }
 
 function processUser(user) {
-  console.log(`>> Processing user ${user.screen_name}`);
-  // Find a lead who has been adquired, not cleared nor activated
-  watcherService.findLeads({ adquired_on: {$exists: true}, cleared_on: {$exists: false}, activated_on: {$exists: false}}, 1, 0, { adquired_on: 1, followers_count: 1}).then(leads => {
-      if(leads.length > 0) {
-        let unfollower = new Unfollower(user.credentials);
-        leads.forEach(lead => {
-          unfollower.unfollow(lead.screen_name).then(() => {
-            console.log(`>> Unfollow ${lead.screen_name} [${lead.followers_count}]`);
-            updateLead(lead);
-          });
-        })
-      }
+  return new Promise((resolve, reject) => {
+    logger.debug(`Processing user ${user.screen_name}`);
+    // Find a lead who has been adquired, not cleared nor activated
+    watcherService.findLeads({ 
+        adquired_on: {$exists: true}, 
+        cleared_on: {$exists: false}, 
+        activated_on: {$exists: false}
+        }, 
+        1, 0, 
+        { adquired_on: 1, followers_count: 1 }
+      ).then(leads => {
+        logger.debug(`Found ${leads.lenght} leads`)
+        if(leads.length > 0) {
+          resolve(unfollow(user, lead[0]));
+        } else {
+          reject(false);
+        }
+      })
+      .error(err => reject(err));
   });
 }
 
 let watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
+let logger = log4js.getLogger();
+logger.level = 'debug';
+logger.debug('Running DM cronjob');
 
+// Fetch All users
 watcherService.findUsers({}, 100).then(users => {
-  console.log(`>> Found ${users.length} users`);
-  users.forEach(processUser)
+  logger.debug(`Found ${users.length} users`);
+  let promises = users.map(user => processUser(user) );
+  
+  Promise.all(promises)
+  .then(watcherService.close)
+  .catch(watcherService.close);
+  
 ;});
