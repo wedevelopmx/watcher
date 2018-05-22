@@ -169,6 +169,7 @@ module.exports = function(app, passport) {
       followers_count: { $gte: page.filter.followers_count },
       targeted_on: {$exists: true},
       received_at: { $lt: new Date(Date.now() - (page.delay * 60000)) },
+      'stats.rt': { $lt: page.rt },
       $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
     }, page.size, page.offset, page.sort)
     .then(result => {
@@ -223,6 +224,7 @@ function pageable(req, defaultSort) {
   let sort = {};
   let asc = req.query.asc && req.query.asc == 'true' ? true : false;
   let sortBy = req.query.sort || defaultSort ||'followers_count';
+  let rt = req.query.rt || 90;
   let delay = req.query.delay && req.query.delay == 'false' ? 0 : 5;
   let followers_count = req.query.followers_count || 50;
   sort[sortBy] = asc ? 1 : -1;
@@ -236,7 +238,8 @@ function pageable(req, defaultSort) {
     sortBy: sortBy,
     sort: sort,
     asc: asc,
-    delay: delay
+    delay: delay,
+    rt: rt
   }
 }
 
