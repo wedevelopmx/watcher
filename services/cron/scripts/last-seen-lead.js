@@ -22,10 +22,11 @@ function inspect(user) {
 let watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 let logger = log4js.getLogger();
 logger.level = 'debug';
-logger.debug('Running DM cronjob');
+logger.debug('Running Last Seen cronjob');
 
 // Get all new users
-watcherService.findUsers({import_next_cursor : { $eq: 0 }, friend_next_cursor : { $eq: 0 }}, 100, {}).then(users => { // is_being_setup: true
+watcherService.findUsers({}, 100, {}).then(users => { // is_being_setup: true
+  logger.debug(`Users found ${users.length}`)
   // Create a stream for each new user
   let promises = users.map(user => inspect(user));
   Promise.all(promises)

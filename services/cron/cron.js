@@ -8,7 +8,7 @@ let cronjobs = [
   { name: 'datetime', schedule: '00 */15 * * * *', command: 'node scripts/dm.js | tee -a log/dm.log'},
   { name: 'unfollow', schedule: '00 */15 * * * *', command: 'node scripts/unfollow.js | tee -a log/unfollow.log'},
   // { name: 'analytics', schedule: '00 * */1 * * *', command: 'node scripts/user-analytics.js | tee -a log/user-analytics.log'},
-  { name: 'last-seen', schedule: '00 * 7 * * *', command: 'node scripts/last-seen-lead.js | tee -a log/last-seen-lead.log'}
+  { name: 'last-seen', schedule: '00 00 */1 * * *', command: 'node scripts/last-seen-lead.js | tee -a log/last-seen-lead.log'}
 ];
 
 cronjobs.forEach(cronjob => {
@@ -19,8 +19,8 @@ cronjobs.forEach(cronjob => {
         return;
       }
       console.log(`>> ${cronjob.name} executed at ${new Date()}`)
-      // console.log(`stdout: ${stdout}`);
-      // console.log(`stderr: ${stderr}`);
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
     });
 
   }, null, true, 'America/Mexico_City');
