@@ -41,6 +41,7 @@
             <a href="https://twitter.com/<%- account.screen_name %>" target="_blank" class="d-block text-secondary">
               @<%- account.screen_name %>
             </a>
+            <span class="d-block font-italic font-weight-light" style="font-size: .8rem"><%- utils.moment(account.created_at).format("MMM 'YY") %></span>
           </td>
           <td class="align-middle text-center"><%- account[events].length %></td>
           <td class="align-middle text-center"><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
