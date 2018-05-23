@@ -3,16 +3,18 @@ const express = require('express');
 const router = express.Router();
 const config = require('../config');
 const WatcherService = require('commons').WatcherService;
+const FunnelService = require('commons').FunnelService;
 const WatcherPipe = require('commons').WatcherPipe;
 const Term = require('commons').Term;
 const User = require('commons').User;
 
 const watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
+const funnelService = new FunnelService(config.mongo.uri, config.mongo.options);
 const watcherPipe = new WatcherPipe();
 
 module.exports = function(app, passport) {
   const utils = { moment: moment, bg: bg, money: money };
-  
+
   // define the home page route
   app.get('/', function (req, res) {
     res.render('index')
@@ -20,42 +22,53 @@ module.exports = function(app, passport) {
 
   // define the about route
   app.get('/dashboard', isLoggedIn, function (req, res) {
-    res.render('dashboard', {
-      user: req.user
-    })
+    Promise.all([
+      funnelService.getTargetStats(),
+      funnelService.getAdquiredStats(),
+      funnelService.getActivatedStats()
+    ]).then(results => {
+      res.render('dashboard', {
+        user: req.user,
+        stats: {
+          target: results[0],
+          adquired: results[1],
+          activated: results[2]
+        }
+      });
+    }).catch(err => console.log(err));
   });
-  
+
   app.get('/direct-message', isLoggedIn, function (req, res) {
     User.findById(req.user._id).then(user => {
       res.render('direct-message', {
         user: user
-      });  
+      });
     });
   });
-  
+
   app.post('/direct-message', isLoggedIn, function (req, res) {
     User.findOneAndUpdate({_id: req.user._id }, { $set: { welcome: req.body.welcome }}, {new: true}, function(err, doc){
         if(err) res.redirect('/direct-message?error');
         res.redirect('/direct-message?success');
     });
   });
-  
+
   app.get('/integration', isLoggedIn, function (req, res) {
     User.findById(req.user._id).then(user => {
       res.render('integration', {
         user: user
-      });  
+      });
     });
   });
-  
+
   app.post('/integration', isLoggedIn, function (req, res) {
-    
+
     User.findOneAndUpdate({_id: req.user._id }, { $set: { credentials: req.body }}, {new: true}, function(err, doc){
         if(err) res.redirect('/integration?error');
         res.redirect('/integration?success');
     });
   });
-  
+
   app.get('/terms', isLoggedIn, function (req, res) {
     watcherService.findAllTerms(req.user.twitter.username).then(result => {
       res.render('terms', {
@@ -64,10 +77,10 @@ module.exports = function(app, passport) {
       });
     });
   });
-  
+
   app.post('/terms', isLoggedIn, function (req, res) {
     console.log(`>> Terms ${req.body.term.length}`);
-    
+
     watcherService.batchUpdate(Term, { _id: { $in: req.body.term }}, { monitor: true }).then(() => {
       watcherService.batchUpdate(Term, { _id: { $nin: req.body.term }}, { monitor: false }).then(() => {
         watcherService.findAllTerms(req.user.twitter.username).then(result => {
@@ -75,7 +88,7 @@ module.exports = function(app, passport) {
             user: req.user,
             terms: result
           });
-          
+
           watcherPipe.listenerUpdate(req.user.twitter.username);
         });
       });
