@@ -102,7 +102,7 @@ module.exports = function(app, passport) {
     let now = today();
 
     watcherService
-    .findLeadAndCount({ owner: userName, activated_on: { $exists: true}, last_seen_on: { $lte: now } }, page.size, page.offset, page.sort)
+    .findLeadAndCount({ owner: userName, targeted_on: { $exists: true }, cleared_on: { $exists: true } }, page.size, page.offset, page.sort)
     .then(result => {
       console.log(`>> Displaying ${ result.leads.length} of ${result.count}`)
       res.render('leads', Object.assign({
