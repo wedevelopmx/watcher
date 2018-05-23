@@ -72,7 +72,7 @@
       </li>
     <% } else { %>
       <li class="page-item">
-        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-offset - size%>&sort=<%-sortBy%>&asc=<%- asc%>">Previous</a>
+        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-offset - size%>&sort=<%-sortBy%>&asc=<%- asc%>&rt=<%- rt%>&min_followers_count=<%- filter.min_followers_count%>&max_followers_count=<%- filter.max_followers_count%>">Previous</a>
       </li>
     <% } %>
     <% for(page = offset/size; page < Math.ceil(count / size) && page < (offset/size) + 10; page ++ ) { %>
@@ -81,7 +81,7 @@
       <% } else { %>
         <li class="page-item">
       <% } %>
-        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-page * size %>&sort=<%-sortBy%>&asc=<%- asc%>"><%- page + 1 %></a>
+        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-page * size %>&sort=<%-sortBy%>&asc=<%- asc%>&rt=<%- rt%>&min_followers_count=<%- filter.min_followers_count%>&max_followers_count=<%- filter.max_followers_count%>"><%- page + 1 %></a>
       </li>
     <% } %>
     <% if(offset + size > count) { %>
@@ -90,7 +90,7 @@
       </li>
     <% } else { %>
       <li class="page-item">
-        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-offset + size%>&sort=<%-sortBy%>&asc=<%- asc%>">Next</a>
+        <a class="page-link" href="/<%- resource %>?size=<%-size%>&offset=<%-offset + size%>&sort=<%-sortBy%>&asc=<%- asc%>&rt=<%- rt%>&min_followers_count=<%- filter.min_followers_count%>&max_followers_count=<%- filter.max_followers_count%>">Next</a>
       </li>
     <% } %>
   </ul>

@@ -166,7 +166,7 @@ module.exports = function(app, passport) {
     watcherService
     .findLeadAndCount({
       owner: userName,
-      followers_count: { $gte: page.filter.followers_count },
+      followers_count: { $gte: page.filter.min_followers_count, $lte: page.filter.max_followers_count },
       targeted_on: {$exists: true},
       received_at: { $lt: new Date(Date.now() - (page.delay * 60000)) },
       'stats.rt': { $lt: page.rt },
@@ -226,14 +226,16 @@ function pageable(req, defaultSort) {
   let sortBy = req.query.sort || defaultSort ||'followers_count';
   let rt = req.query.rt || 90;
   let delay = req.query.delay && req.query.delay == 'false' ? 0 : 5;
-  let followers_count = req.query.followers_count || 50;
+  let min_followers_count = req.query.min_followers_count || 50;
+  let max_followers_count = req.query.max_followers_count || 5000;
   sort[sortBy] = asc ? 1 : -1;
 
   return {
     size: parseInt(req.query.size || 10),
     offset: parseInt(req.query.offset || 0),
     filter: {
-      followers_count: followers_count
+      max_followers_count: max_followers_count,
+      min_followers_count: min_followers_count
     },
     sortBy: sortBy,
     sort: sort,
