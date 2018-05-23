@@ -16,7 +16,7 @@ class Unfollower extends Twit {
 
   follow(screen_name) {
     return new Promise((resolve, reject) => {
-      this.post('friendships/create', { screen_name: screen_name, follow: true }, (err, data, response) => {
+      this.post('friendships/create', { screen_name: screen_name, follow: false }, (err, data, response) => {
         if(err) reject(err);
         resolve(data)
       });
