@@ -44,7 +44,7 @@
             <span class="d-block font-italic font-weight-light" style="font-size: .8rem"><%- utils.moment(account.created_at).format("MMM 'YY") %></span>
           </td>
           <td class="align-middle text-center"><%- account[events].length %></td>
-          <td class="align-middle text-center"><%- utils.moment(account[date.field]).utcOffset("-06:00").format('h:mm:ss a, MMMM Do') %></td>
+          <td class="align-middle text-center"><%- utils.moment(account[date.field]).utcOffset("-05:00").format('h:mm:ss a, MMMM Do') %></td>
           <td class="align-middle text-center">
             <span class="<%- utils.bg(account.followers_count) %>"><%- utils.money(account.followers_count) %></span>
           </td>
