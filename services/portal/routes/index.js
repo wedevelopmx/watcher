@@ -225,9 +225,9 @@ function pageable(req, defaultSort) {
   let asc = req.query.asc && req.query.asc == 'true' ? true : false;
   let sortBy = req.query.sort || defaultSort ||'followers_count';
   let rt = req.query.rt || 90;
-  let delay = isNaN(req.query.delay) ? 5 : parseInt(req.query.delay);
-  let min_followers_count = req.query.min_followers_count || 50;
-  let max_followers_count = req.query.max_followers_count || 5000;
+  let delay = isNaN(req.query.delay) ? 2 : parseInt(req.query.delay);
+  let min_followers_count = req.query.min_followers_count || 100;
+  let max_followers_count = req.query.max_followers_count || 1500;
   sort[sortBy] = asc ? 1 : -1;
 
   return {
