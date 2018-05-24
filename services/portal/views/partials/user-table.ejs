@@ -11,6 +11,7 @@
         <th></th>
         <th>User</th>
         <th>Hits</th>
+        <th>Activity</th>
         <th>
           <a href="/<%- resource %>?size=<%-size%>&offset=<%-offset%>&sort=<%- date.field %>&asc=<%- !asc%>"><%- date.display %></a>
         </th>
@@ -44,6 +45,7 @@
             <span class="d-block font-italic font-weight-light" style="font-size: .8rem"><%- utils.moment(account.created_at).format("MMM 'YY") %></span>
           </td>
           <td class="align-middle text-center"><%- account[events].length %></td>
+          <td class="align-middle text-center"><%- account.activity ? account.activity : '?'  %></td>
           <td class="align-middle text-center"><%- utils.moment(account[date.field]).utcOffset("-05:00").format('h:mm:ss a, MMMM Do') %></td>
           <td class="align-middle text-center">
             <span class="<%- utils.bg(account.followers_count) %>"><%- utils.money(account.followers_count) %></span>
@@ -53,10 +55,10 @@
           </td>
           <td class="align-middle text-center">
             <span class="d-flex mb-2" style="font-size: 10px;">
-              <span class="badge badge-success <%- account.stats.tw === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.tw%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.tw%>%">&nbsp;</span>
-              <span class="badge badge-info  <%- account.stats.rp === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rp%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rp%>%">&nbsp;</span>
-              <span class="badge badge-warning  <%- account.stats.qt === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.qt%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.qt%>%">&nbsp;</span>
-              <span class="badge badge-danger  <%- account.stats.rt === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rt%>%;" data-toggle="tooltip" data-placement="top" title="<%- account.stats.rt%>%">&nbsp;</span>
+              <span class="badge badge-success <%- account.stats.tw === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.tw%>%;" data-toggle="tooltip" data-placement="top" title="TW:<%- account.stats.tw%>%">&nbsp;</span>
+              <span class="badge badge-info  <%- account.stats.rp === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rp%>%;" data-toggle="tooltip" data-placement="top" title="RP:<%- account.stats.rp%>%">&nbsp;</span>
+              <span class="badge badge-warning  <%- account.stats.qt === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.qt%>%;" data-toggle="tooltip" data-placement="top" title="QT:<%- account.stats.qt%>%">&nbsp;</span>
+              <span class="badge badge-danger  <%- account.stats.rt === 0 ? 'd-none' : '' %>" style="width:<%- account.stats.rt%>%;" data-toggle="tooltip" data-placement="top" title="RT:<%- account.stats.rt%>%">&nbsp;</span>
             </span>
             <span style="font-size: 75%"><%- utils.money(account.statuses_count) %></span>
           </td>
