@@ -13,7 +13,7 @@ function analize(tweets) {
   let rt = 0, reply = 0, twit = 0, quote = 0;
   tweets.forEach(tweet => {
     // console.log(`>> ${tweet.text}`);
-    if(retweet.in_reply_to_status_id) {
+    if(tweet.in_reply_to_status_id) {
       reply++;
     } else if(tweet.retweeted_status) {
       rt ++;
