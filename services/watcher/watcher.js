@@ -49,7 +49,7 @@ class Producer {
     tweet.user.owner = this.screen_name;
     tweet.user.received_at = now;
     // Clasify
-    if(retweet.in_reply_to_status_id) {
+    if(tweet.in_reply_to_status_id) {
       tweet.user.activity = 'reply';
     } else if(tweet.retweeted_status) {
       tweet.user.activity = 'retweet';
