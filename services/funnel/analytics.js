@@ -27,7 +27,7 @@ function analize(tweets) {
   return {
     tw: (100*twit/tweets.length).toFixed(2),
     rt: (100*rt/tweets.length).toFixed(2),
-    rp: (100*reply/tweets.length).toFixed(2)
+    rp: (100*reply/tweets.length).toFixed(2),
     qt: (100*quote/tweets.length).toFixed(2)
   };
 }
