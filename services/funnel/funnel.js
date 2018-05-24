@@ -11,22 +11,22 @@ function save(lead, event) {
   return new Promise((resolve, reject) => {
     // Find the document
     Lead.findOneAndUpdate({ id: lead.id, owner: lead.owner }, lead, { upsert: false }, function(error, result) {
-      if(error) { 
-        reject(err); 
+      if(error) {
+        reject(err);
       } else {
         // If the document doesn't exist
         if (!result) {
           // Create it
           result = new Lead(lead);
-        } 
-        
+        }
+
         // Update event array
         if(!result[event.target])
           result[event.target] = [];
         result[event.target].unshift(result[event.source]);
         result[event.source] = lead[event.source];
-      
-        
+
+
         // Save the document
         result.save(function(error) {
             if(error) reject(error);
@@ -43,7 +43,7 @@ function target(ch, msg) {
   // Targeted
   payload.targeted_on = new Date();
   save(payload, { target: 'targeted_events', source: 'targeted_on' }).then(result => {
-    if(result.stats.tw + result.stats.rt + result.stats.rp < 0.8) {
+    if((result.stats && !result.stats.qt) || result.stats.qt + result.stats.tw + result.stats.rt + result.stats.rp < 0.8) {
       // console.log(`>> ${result.screen_name} stats total: ${result.stats.tw + result.stats.rt + result.stats.rp}`);
       // Ready to run analytics on user
       ch.sendToQueue(q.analytics, new Buffer(JSON.stringify(result)));
