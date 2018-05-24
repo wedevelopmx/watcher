@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 // create a User
 var Lead = new Schema({
    owner: String,
+   activity: String,
    last_seen_on: { type: Date, default: Date.now },
    targeted_on: { type: Date },
    adquired_on: { type: Date },
@@ -18,7 +19,8 @@ var Lead = new Schema({
    stats: {
      tw: { type: Number, default: 0},
      rt: { type: Number, default: 0},
-     rp: { type: Number, default: 0}
+     rp: { type: Number, default: 0},
+     qt: { type: Number, default: 0}
    },
    id: Number,
    id_str: String,

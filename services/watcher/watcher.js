@@ -45,8 +45,20 @@ class Producer {
   process(tweet) {
     console.log(`>> [${this.screen_name}] Incoming message from @${tweet.user.screen_name} ...`) //(${tweet.text})
     let now = new Date();
+    // User
     tweet.user.owner = this.screen_name;
     tweet.user.received_at = now;
+    // Clasify
+    if(retweet.in_reply_to_status_id) {
+      tweet.user.activity = 'reply';
+    } else if(tweet.retweeted_status) {
+      tweet.user.activity = 'retweet';
+    } else if(tweet.quoted_status) {
+      tweet.user.activity = 'quoted';
+    } else {
+      tweet.user.activity = 'tweet';
+    }
+    // Tweet
     tweet.source = this.screen_name;
     tweet.received_at = now;
     this.ch.sendToQueue(q.target, new Buffer(JSON.stringify(tweet.user)));

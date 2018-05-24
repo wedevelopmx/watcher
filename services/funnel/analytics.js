@@ -10,22 +10,25 @@ const watcherService = new WatcherService(config.mongo.uri, config.mongo.options
 let timelines = {};
 
 function analize(tweets) {
-  let rt = 0, reply = 0, twit = 0;
+  let rt = 0, reply = 0, twit = 0, quote = 0;
   tweets.forEach(tweet => {
     // console.log(`>> ${tweet.text}`);
-    if(tweet.retweeted_status) {
+    if(retweet.in_reply_to_status_id) {
+      reply++;
+    } else if(tweet.retweeted_status) {
       rt ++;
     } else if(tweet.quoted_status) {
-      reply ++;
+      quote ++;
     } else {
       twit ++;
     }
   });
-  
+
   return {
     tw: (100*twit/tweets.length).toFixed(2),
     rt: (100*rt/tweets.length).toFixed(2),
     rp: (100*reply/tweets.length).toFixed(2)
+    qt: (100*quote/tweets.length).toFixed(2)
   };
 }
 
@@ -49,7 +52,7 @@ watcherService.findUsers({}, 100).then(users => {
   users.forEach(user => {
     timelines[user.screen_name] = new Timeline(user.credentials);
   });
-  
+
   // Monitor messages to our steam service
   const uri = 'amqp://rabbitmq:rabbitmq@rabbit/';
 
@@ -66,5 +69,5 @@ watcherService.findUsers({}, 100).then(users => {
       });
     }
   });
-  
+
 });
