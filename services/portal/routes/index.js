@@ -22,17 +22,20 @@ module.exports = function(app, passport) {
 
   // define the about route
   app.get('/dashboard', isLoggedIn, function (req, res) {
+    let userName = req.user.screen_name;
     Promise.all([
-      funnelService.getTargetStats(),
-      funnelService.getAdquiredStats(),
-      funnelService.getActivatedStats()
+      funnelService.getTargetStats(userName),
+      funnelService.getProspectStats(userName),
+      funnelService.getAdquiredStats(userName),
+      funnelService.getActivatedStats(userName)
     ]).then(results => {
       res.render('dashboard', {
         user: req.user,
         stats: {
           target: results[0],
-          adquired: results[1],
-          activated: results[2]
+          prospect: results[1],
+          adquired: results[2],
+          activated: results[3]
         }
       });
     }).catch(err => console.log(err));
