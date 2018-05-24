@@ -185,6 +185,7 @@ module.exports = function(app, passport) {
       followers_count: { $gte: page.filter.min_followers_count, $lte: page.filter.max_followers_count },
       targeted_on: {$exists: true},
       received_at: { $lt: new Date(Date.now() - (page.delay * 60000)) },
+      activity: { $ne: 'retweet' },
       'stats.rt': { $lt: page.rt },
       $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
     }, page.size, page.offset, page.sort)
@@ -240,6 +241,7 @@ function pageable(req, defaultSort) {
   let sort = {};
   let asc = req.query.asc && req.query.asc == 'true' ? true : false;
   let sortBy = req.query.sort || defaultSort ||'followers_count';
+  let activity = req.query.activity || 'retweet';
   let rt = req.query.rt || 90;
   let delay = isNaN(req.query.delay) ? 2 : parseInt(req.query.delay);
   let min_followers_count = req.query.min_followers_count || 100;
@@ -257,7 +259,8 @@ function pageable(req, defaultSort) {
     sort: sort,
     asc: asc,
     delay: delay,
-    rt: rt
+    rt: rt,
+    activity: activity
   }
 }
 

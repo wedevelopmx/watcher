@@ -32,7 +32,7 @@ class FunnelService extends DatabaseService {
   }
 
   getTargetStats(userName) {
-    return this.getStats({owner: userName, targeted_on: { "$exists": true }}, 'targeted_on');
+    return this.getStats({owner: userName, targeted_on: { "$exists": true }, activity: { $ne: 'retweet' }}, 'targeted_on');
   }
 
   getProspectStats(userName) {
@@ -41,6 +41,7 @@ class FunnelService extends DatabaseService {
       followers_count: { $gte: 100, $lte: 1500 },
       targeted_on: {$exists: true},
       'stats.rt': { $lt: 90 },
+      activity: { $ne: 'retweet' },
       $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
     }, 'targeted_on');
   }

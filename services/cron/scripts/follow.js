@@ -32,6 +32,7 @@ function processUser(user) {
         followers_count: { $gte: 100, $lte: 1000 },
         targeted_on: {$exists: true},
         'stats.rt': { $lt: 90 },
+        activity: { $ne: 'retweet' },
         received_at: { $gte: new Date(Date.now() - (60 * 60000)), $lt: new Date(Date.now() - (3 * 60000)) },
         $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
         },
