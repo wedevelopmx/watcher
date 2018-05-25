@@ -54,6 +54,10 @@ class FunnelService extends DatabaseService {
     return this.getStats({owner: userName, activated_on: { "$exists": true }}, 'activated_on');
   }
 
+  getClearedStats(userName) {
+    return this.getStats({owner: userName, cleared_on: { "$exists": true }}, 'cleared_on');
+  }
+
   getStats(filter, field) {
     return new Promise((resolve, reject) => {
       let params = aggregateBy(filter, field);

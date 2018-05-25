@@ -27,7 +27,8 @@ module.exports = function(app, passport) {
       funnelService.getTargetStats(userName),
       funnelService.getProspectStats(userName),
       funnelService.getAdquiredStats(userName),
-      funnelService.getActivatedStats(userName)
+      funnelService.getActivatedStats(userName),
+      funnelService.getClearedStats(userName)
     ]).then(results => {
       res.render('dashboard', {
         user: req.user,
@@ -35,7 +36,8 @@ module.exports = function(app, passport) {
           target: results[0],
           prospect: results[1],
           adquired: results[2],
-          activated: results[3]
+          activated: results[3],
+          cleared: results[4]
         }
       });
     }).catch(err => console.log(err));
