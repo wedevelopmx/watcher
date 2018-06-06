@@ -3,8 +3,12 @@ const config = require('../config');
 const WatcherService = require('commons').WatcherService;
 const Unfollower = require('commons').Unfollower;
 const Lead = require('commons').Lead;
+const ONE_MINUTE = 60000;
+const ONE_HOUR = 3600000;
+const ONE_DAY = 86400000;
 
 function unfollow(user, lead) {
+  logger.debug(`>> ${user.screen_name} to unfollow ${lead.screen_name}`);
   return new Promise((resolve, reject) => {
     let unfollower = new Unfollower(user.credentials);
     // Unfollow
@@ -31,7 +35,8 @@ function processUser(user) {
         owner: user.screen_name,
         adquired_on: {$exists: true},
         cleared_on: {$exists: false},
-        activated_on: {$exists: false}
+        activated_on: {$exists: false},
+        adquired_on: { $lt: new Date(Date.now() - (2 * ONE_DAY) ) } // Wait two days before unfollow
         },
         1, 0,
         { followers_count: 1, adquired_on: 1 }
@@ -50,7 +55,7 @@ function processUser(user) {
 let watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 let logger = log4js.getLogger();
 logger.level = 'debug';
-logger.debug('Running DM cronjob');
+logger.debug('Running UNFOLLOW cronjob');
 
 // Fetch All users
 watcherService.findUsers({}, 100).then(users => {

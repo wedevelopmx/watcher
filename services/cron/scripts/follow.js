@@ -3,6 +3,10 @@ const config = require('../config');
 const WatcherService = require('commons').WatcherService;
 const Unfollower = require('commons').Unfollower;
 const Lead = require('commons').Lead;
+const ONE_MINUTE = 60000;
+const ONE_HOUR = 3600000;
+const ONE_DAY = 86400000;
+
 
 function follow(user, lead) {
   return new Promise((resolve, reject) => {
@@ -33,7 +37,7 @@ function processUser(user) {
         targeted_on: {$exists: true},
         'stats.rt': { $lt: 90 },
         activity: { $ne: 'retweet' },
-        received_at: { $gte: new Date(Date.now() - (60 * 60000)), $lt: new Date(Date.now() - (3 * 60000)) },
+        received_at: { $gte: new Date(Date.now() - (15 * ONE_MINUTE)), $lt: new Date(Date.now()) },
         $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
         },
         10, 0,
@@ -60,7 +64,7 @@ function processUser(user) {
 let watcherService = new WatcherService(config.mongo.uri, config.mongo.options);
 let logger = log4js.getLogger();
 logger.level = 'debug';
-logger.debug('Running Follow cronjob');
+logger.debug('Running FOLLOW cronjob');
 
 // Fetch All users
 watcherService.findUsers({}, 100)
