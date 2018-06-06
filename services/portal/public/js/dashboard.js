@@ -2,17 +2,20 @@ function gatherLabels(items) {
   return items.map(item => `${item._id.day}/${item._id.month}/${item._id.year}`);
 }
 
-function gatherData(items) {
-  return items.map(item => item.count);
+function gatherData(items, labels) {
+  let values = {};
+  items.forEach(item => values[`${item._id.day}/${item._id.month}/${item._id.year}`] = item.count);
+  // Fix missing dates with 0
+  return labels.map(item => values.hasOwnProperty(item) ? values[item] : 0);
 }
 
-function createGraph(dataset, label, color) {
+function createGraph(dataset, label, color, labels) {
   return {
 		label: label,
 		borderColor: color,
 		backgroundColor: color,
 		fill: false,
-		data: gatherData(dataset),
+		data: gatherData(dataset, labels),
 		yAxisID: 'y-axis-1',
 	};
 }
@@ -35,9 +38,9 @@ window.onload = function() {
   	datasets: []
   };
 
+  let labels = gatherLabels(digitalData.target);
   for(axis in digitalData) {
-    let graph = createGraph(digitalData[axis], axis.toUpperCase(), chartColors[i++] );
-    let labels = gatherLabels(digitalData[axis]);
+    let graph = createGraph(digitalData[axis], axis.toUpperCase(), chartColors[i++], labels);
     lineChartData.datasets.push(graph);
     lineChartData.labels = labels;
   }

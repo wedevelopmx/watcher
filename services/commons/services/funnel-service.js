@@ -1,5 +1,6 @@
 const DatabaseService = require('./database-service');
 const Lead = require('../models/lead');
+const ONE_DAY = 86400000;
 
 function aggregateBy(filter, field) {
   return [
@@ -7,9 +8,9 @@ function aggregateBy(filter, field) {
     {
         "$project":{
             "_id": 0,
-            "y": { "$year": `$${field}` },
-            "m": { "$month": `$${field}` },
-            "d": { "$dayOfMonth":  `$${field}` }
+            "y": { "$year": { date: `$${field}`, timezone: "-05:00" } },
+            "m": { "$month": { date: `$${field}`, timezone: "-05:00" } },
+            "d": { "$dayOfMonth":  { date: `$${field}`, timezone: "-05:00" } }
         }
     },
     {
@@ -32,14 +33,17 @@ class FunnelService extends DatabaseService {
   }
 
   getTargetStats(userName) {
-    return this.getStats({owner: userName, targeted_on: { "$exists": true }, activity: { $ne: 'retweet' }}, 'targeted_on');
+    return this.getStats({
+      owner: userName,
+      targeted_on: { "$exists": true, $gte: new Date(Date.now() - (7 * ONE_DAY)) },
+      activity: { $ne: 'retweet' }}, 'targeted_on');
   }
 
   getProspectStats(userName) {
     return this.getStats({
       owner: userName,
       followers_count: { $gte: 100, $lte: 1500 },
-      targeted_on: {$exists: true},
+      targeted_on: { "$exists": true, $gte: new Date(Date.now() - (7 * ONE_DAY)) },
       'stats.rt': { $lt: 90 },
       activity: { $ne: 'retweet' },
       $or: [{adquired_on: { $exists: false}}, {cleared_on: { $exists: true }} ]
@@ -47,15 +51,24 @@ class FunnelService extends DatabaseService {
   }
 
   getAdquiredStats(userName) {
-    return this.getStats({owner: userName, adquired_on: { "$exists": true }}, 'adquired_on');
+    return this.getStats({
+      owner: userName,
+      adquired_on: { "$exists": true, $gte: new Date(Date.now() - (7 * ONE_DAY)) }
+    }, 'adquired_on');
   }
 
   getActivatedStats(userName) {
-    return this.getStats({owner: userName, activated_on: { "$exists": true }}, 'activated_on');
+    return this.getStats({
+      owner: userName,
+      activated_on: { "$exists": true, $gte: new Date(Date.now() - (7 * ONE_DAY)) }
+    }, 'activated_on');
   }
 
   getClearedStats(userName) {
-    return this.getStats({owner: userName, cleared_on: { "$exists": true }}, 'cleared_on');
+    return this.getStats({
+      owner: userName,
+      cleared_on: { "$exists": true,  $gte: new Date(Date.now() - (7 * ONE_DAY)) }
+    }, 'cleared_on');
   }
 
   getStats(filter, field) {
